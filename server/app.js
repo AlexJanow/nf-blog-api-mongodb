@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("./lib/db");
-
+const mongoose = require("mongoose");
+const cors = require("cors");
 /*
   We create an express app calling
   the express function.
@@ -25,9 +26,21 @@ app.get("/", (req, res) => {
 });
 
 /*
-  We have to start the server. We make it listen on the port 4000
+  Connected to Mongo, if successful, put our express app to listen in port 4000
+
 
 */
-app.listen(4000, () => {
-  console.log("Listening on http://localhost:4000");
-});
+mongoose
+  .connect("mongodb://localhost:27017/", {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+  })
+  .then(() => {
+    console.log("Connected to mongo");
+    app.listen(4000, () => {
+      console.log("Listening on http://127.0.0.1:4000");
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
